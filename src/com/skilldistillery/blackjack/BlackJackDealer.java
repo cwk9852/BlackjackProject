@@ -80,7 +80,7 @@ public class BlackJackDealer extends Player implements HouseRules {
 			player.getHand().add(card);
 			System.out.println(card.toPlayer());
 		case 2:
-			if (houserule) {
+			if (houseRule) {
 				card = deck.removeCard();
 				getHand().add(card);
 				System.out.println(card.toHouse());
@@ -106,10 +106,10 @@ public class BlackJackDealer extends Player implements HouseRules {
 			string = null;
 		}
 		if (houseHandValueFinal > 21) {
-			string = "DEALER BUSTS, PLAYER COLLECTS";
+			string = "DEALER BUSTS ON " + houseHandValueFinal + ", PLAYER COLLECTS";
 		}
 		if (playerHandValueFinal > 21) {
-			string = "PLAYER BUSTS, HOUSE COLLECTS";
+			string = "PLAYER BUSTS ON " + playerHandValueFinal + ", HOUSE COLLECTS";
 		}
 		if (playerHandValueFinal == 21) {
 			string = "PLAYER BLACKJACK";
