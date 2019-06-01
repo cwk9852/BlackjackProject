@@ -5,53 +5,45 @@ import java.util.Scanner;
 public class BlackjackApp {
 
 	public static void main(String[] args) {
-		BlackjackApp dA = new BlackjackApp();
-		dA.run();
+		BlackjackApp table = new BlackjackApp();
+		table.run();
 	}
 
 	public void run() {
-		User user = new User();
-		Dealer dealer = new Dealer();
+		BlackJackDealer dealer = new BlackJackDealer();
+		BlackJackPlayer player = new BlackJackPlayer();
 		Scanner kb = new Scanner(System.in);
 		System.out.println("Welcome to Cecil's Blackjack App");
-		System.out.println("The betting system doesnt work but we are storing the value incase we want to use it later.");
-		System.out.println("Make a Bet:");
-		int bet = kb.nextInt();
-		System.out.println("Dealing");
+		System.out.println("Shuffling...");
 		dealer.getDeck().shuffle();
-		dealer.dealCards(dealer, 1);
-		dealer.dealCards(user, 1);
-		dealer.dealCards(user, 1);
-		dealer.dealCards(dealer, 1);
-		user.getHand().printHandAndValue(user.getHand(), user.getHand().getHandValue());
-		System.out.println("Dealer: " + dealer.getHand().getHandValue());
-		System.out.println();
-		System.out.println("Player: " + user.getHand().getHandValue());
-		dealer.getHand().printHandAndValue(dealer.getHand(), dealer.getHand().getHandValue());
-		System.out.println("Do you want insurance? ");
-		if (dealer.getHand().getHandValue() == 21 || user.getHand().getHandValue() == 21 ) {
-
-		}
-			do {
-		if (user.getHand().getHandValue() < 21) {
-				System.out.println("[1. Hit][2. Stay]");
+		System.out.println("Dealing two cards to each player.. \n");
+		System.out.println("[" + dealer.dealCard(dealer).toDealer() + "]");
+		System.out.println("[" + dealer.dealCard(player).toPlayer() + "]");
+		final Card theBlind = dealer.dealCard(dealer);
+		System.out.println("[" + theBlind.blind() + "]");
+		System.out.println("[" + dealer.dealCard(player).toPlayer() + "]\n");
+		System.out.println("[  Dealer Shown:\t" + (dealer.getHand().getHandValue() - theBlind.getValue()) + " ]");
+		System.out.println("[  Player Hand:\t\t" + player.getHandValue(player.getHand()) + " ]\n");
+		do {
+			if (player.getHand().getHandValue() < 21) {
+				System.out.println("[1 - Hit][2 - Stay]");
 				int input = kb.nextInt();
+				System.out.println("[Turn the Blind: " + dealer.turnBlind(theBlind) + ".]");
+				System.out.println("Dealer Hand:\t" + (dealer.getHand().getHandValue()));
 				switch (input) {
 				case 1:
-					dealer.dealCards(user, 1);
+					System.out.println(dealer.dealCard(player).toPlayer());
 				case 2:
-					dealer.autoPlay();
-					dealer.checkForWinner();
+					System.out.println(dealer.playHouseRules());
+					System.out.println("Dealer Hand:\t" + dealer.getHandValue(dealer.getHand()));
+					System.out.println("Player Hand:\t" + player.getHandValue(player.getHand()));
 					break;
 				}
-//				user.getHand().printHandAndValue(user.getHand(), user.getHand().getHandValue());
-				System.out.println();
-//				dealer.getHand().printHandAndValue(dealer.getHand(), dealer.getHand().getHandValue());
-			} 
-		} while (user.getHand().getHandValue() < 21) ;
-		System.out.println("Dealer: " + dealer.getHand().getHandValue());
-		System.out.println("Player: " + user.getHand().getHandValue());
-			
-		}
-}
+			}
+		} while (player.getHand().getHandValue() < 21 && dealer.getHand().getHandValue() < 21);
+		final int playerHandValueFinal = player.getHand().getHandValue();
+		final int houseHandValueFinal = dealer.getHand().getHandValue();
+		System.out.println(dealer.announceHandResult(playerHandValueFinal, houseHandValueFinal));
+		kb.close();
+	}
 }

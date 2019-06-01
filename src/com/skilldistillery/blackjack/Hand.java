@@ -17,19 +17,22 @@ public class Hand {
 		}
 	}
 
-	public List<Card> getHandWithBlind() {
+	public List<Card> getHand() {
 		return hand;
 	}
-	public void getOneCard() {
-		
+
+	public Card getLastCard() {
+
+		return null;
 	}
 
 	public void setHand() {
 		this.hand = new ArrayList<>();
 	}
 
-	public void add(Card card) {
+	public Card add(Card card) {
 		hand.add(card);
+		return card;
 	}
 
 	public int getHandValue() {
@@ -39,12 +42,12 @@ public class Hand {
 		}
 		return handValue;
 	}
-	
+
 	public void printHandAndValue(Hand hand, int handValue) {
-	    for (Card card : this.hand) {
-	      System.out.println(card);
-	    }
-	    System.out.println("Total value: " + handValue);
-	  }
+		for (Card card : this.hand) {
+			System.out.println(card);
+		}
+		System.out.println("Total value: " + handValue);
+	}
 
 }

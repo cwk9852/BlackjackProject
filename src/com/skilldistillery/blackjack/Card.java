@@ -39,6 +39,10 @@ public class Card {
 		return rank + " of " + suit;
 	}
 
+	public String blind() {
+		return "FACEDOWN to dealer.";
+	}
+
 	public Suit getSuit() {
 		return suit;
 	}
@@ -59,4 +63,12 @@ public class Card {
 		return rank.getValue();
 	}
 
+	public String toDealer() {
+		return rank + " of " + suit + " to dealer.";
+
+	}
+	public String toPlayer() {
+		return rank + " of " + suit + " to player.";
+		
+	}
 }
