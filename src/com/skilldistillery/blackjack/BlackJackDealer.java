@@ -5,16 +5,12 @@ import java.util.Scanner;
 
 public class BlackJackDealer extends Player implements HouseRules {
 
-	final boolean houseRule = (getHand().getHandValue() < 17);
+	boolean houseRule = (getHand().getHandValue() < 17);
 
 	private Deck deck;
 
 	BlackJackDealer() {
 		deck = new Deck();
-	}
-
-	public int getHandValue(Hand hand) {
-		return hand.getHandValue();
 	}
 
 	public Deck getDeck() {
@@ -50,7 +46,7 @@ public class BlackJackDealer extends Player implements HouseRules {
 		}
 	}
 
-	public Card dealFirstRound(BlackJackPlayer player, Scanner kb) {
+	public Card dealNewHand(BlackJackPlayer player, Scanner kb) {
 		Card card = deck.removeCard();
 		getHand().add(card);
 		System.out.println(card.toHouse());
@@ -64,23 +60,20 @@ public class BlackJackDealer extends Player implements HouseRules {
 		card = deck.removeCard();
 		player.getHand().add(card);
 		System.out.println(card.toPlayer());
-		System.out.println("Dealer Shown: " + (getHand().getHandValue() - theBlind.getValue()));
-		System.out.println("Player Hand: " + player.getHandValue(player.getHand()));
-		continueRound(player, kb);
 		return theBlind;
 	}
 
 	public void continueRound(BlackJackPlayer player, Scanner kb) {
-		System.out.println("[1 HIT][2 STAND]");
-		int input = kb.nextInt();
+		System.out.println("[1 HIT]\t[2 STAND]");
 		Card card;
+		int input = kb.nextInt();
 		switch (input) {
 		case 1:
 			card = deck.removeCard();
 			player.getHand().add(card);
 			System.out.println(card.toPlayer());
 		case 2:
-			if (houseRule) {
+			if (houseRule = true) {
 				card = deck.removeCard();
 				getHand().add(card);
 				System.out.println(card.toHouse());
@@ -90,33 +83,76 @@ public class BlackJackDealer extends Player implements HouseRules {
 		}
 	}
 
-	public String continueRound(BlackJackPlayer player) {
-		String string = "";
+	@Override
+	public boolean checkWinsTable(int houseHandValue, int playerHandValue) {
+		boolean win = false;
+		String winString = "";
+		if ((playerHandValue > houseHandValue) && (houseRule !=true)) {
+				win = true;
+				winString = "HOUSE STAYS ON " + houseHandValue + ", PLAYER COLLECTS ON " + playerHandValue;
+				if (playerHandValue == houseHandValue) {
+					win = true;
+					winString = "PUSH" + houseHandValue;
+				}
+				if (playerHandValue == 21) {
+					win = true;
+					winString = "PLAYER BLACKJACK, HOUSE PAYS";
+				}
+				if (houseHandValue == 21) {
+					win = true;
+					winString = "HOUSE BLACKJACK, HOUSE COLLECTS";
+				}
+			}
+//		} else {
+//			if (playerHandValue > 21) {
+//				win = true;
+//				winString = "PLAYER BUSTS ON " + playerHandValue + ", HOUSE COLLECTS";
+//			}
+//			if (houseHandValue > 21) {
+//				win = true;
+//				winString = "DEALER BUSTS ON " + houseHandValue + ", PLAYER COLLECTS";
+//			}
+//			if (win == true) {
+//				System.out.println(winString);
+//			}
+		return win;
+		}
+	}
 
-		return string;
+	public boolean offerInsurance(BlackJackPlayer player, Scanner kb, Card theBlind) {
+		boolean insurance = false;
+		System.out.println("DEALER CHECKS BLIND, OFFERS INSURANCE");
+		System.out.println("[1 BUY INSURANCE]\t[2 DECLINE INSURANCE]");
+		int input = kb.nextInt();
+		switch (input) {
+		case 1:
+			return insurance = true;
+		case 2:
+			return insurance;
+		default:
+			System.out.println("Invalid Selection");
+		}
+		System.out.println("Flipping the blind.." + theBlind);
+		return insurance;
+	}
+
+	public int getBet(Scanner kb) {
+		System.out.println("Set your bet, an int between 5 and 25");
+		int bet = kb.nextInt();
+		do {
+			if (bet > 5 && bet < 25) {  
+				return bet;
+			} else {
+				System.out.println("Invalid Input");
+				bet = 0;
+			}
+		} while (bet == 0);
+		return bet;
 	}
 
 	@Override
-	public String checkWins(int houseHandValueFinal, int playerHandValueFinal) {
-		String string = null;
-		if (playerHandValueFinal == houseHandValueFinal) {
-			string = "PUSH";
-		}
-		if (houseHandValueFinal < 17 ) {
-			string = null;
-		}
-		if (houseHandValueFinal > 21) {
-			string = "DEALER BUSTS ON " + houseHandValueFinal + ", PLAYER COLLECTS";
-		}
-		if (playerHandValueFinal > 21) {
-			string = "PLAYER BUSTS ON " + playerHandValueFinal + ", HOUSE COLLECTS";
-		}
-		if (playerHandValueFinal == 21) {
-			string = "PLAYER BLACKJACK";
-		}
-		if (houseHandValueFinal == 21) {
-			string = "DEALER BLACKJACK";
-		}
-		return string;
+	public boolean housePays(int playerHandValue, int bet, boolean insurance) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

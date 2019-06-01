@@ -10,6 +10,7 @@ public class Deck {
 
 	public Deck() {
 		deck = newDeck();
+//		System.out.println(deck);
 	}
 
 	public List<Card> getDeck() {

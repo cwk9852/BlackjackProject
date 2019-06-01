@@ -2,6 +2,9 @@ package com.skilldistillery.blackjack;
 
 public interface HouseRules {
 	
-	public String checkWins(int dealerHandValue, int playerHandValue);
+	boolean houseRule = false;
+
+	public boolean checkWinsTable(int dealerHandValue, int playerHandValue);
+	public boolean housePays(int playerHandValue, int bet, boolean insurance);
 
 }

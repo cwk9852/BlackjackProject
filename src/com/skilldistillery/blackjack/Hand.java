@@ -29,6 +29,9 @@ public class Hand {
 	public void setHand() {
 		this.hand = new ArrayList<>();
 	}
+	public void resetHand() {
+		this.hand = null;
+	}
 
 	public Card add(Card card) {
 		hand.add(card);

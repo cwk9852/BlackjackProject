@@ -1,6 +1,6 @@
 package com.skilldistillery.blackjack;
 
-public abstract class Player {
+public class Player {
 
 	private Hand hand;
 
