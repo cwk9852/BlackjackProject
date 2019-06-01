@@ -35,7 +35,7 @@ public class Deck {
 		return deckSize;
 	}
 
-	public Card dealCard() {
+	public Card removeCard() {
 		return deck.remove(0);
 	}
 
