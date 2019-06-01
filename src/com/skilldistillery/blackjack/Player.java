@@ -15,5 +15,9 @@ public abstract class Player {
 	public void setHand(Hand hand) {
 		this.hand = hand;
 	}
+	
+	public int getHandValue(Hand hand) {
+		return hand.getHandValue();
+	}
 
 }

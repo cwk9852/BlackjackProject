@@ -39,8 +39,8 @@ public class Card {
 		return rank + " of " + suit;
 	}
 
-	public String blind() {
-		return "FACEDOWN to dealer.";
+	public String toHouseBlind() {
+		return "FACEDOWN to house.";
 	}
 
 	public Suit getSuit() {
@@ -63,8 +63,8 @@ public class Card {
 		return rank.getValue();
 	}
 
-	public String toDealer() {
-		return rank + " of " + suit + " to dealer.";
+	public String toHouse() {
+		return rank + " of " + suit + " to house.";
 
 	}
 	public String toPlayer() {

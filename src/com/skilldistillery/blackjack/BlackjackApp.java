@@ -3,6 +3,8 @@ package com.skilldistillery.blackjack;
 import java.util.Scanner;
 
 public class BlackjackApp {
+	Scanner kb = new Scanner(System.in);
+	private Card theBlind = null;
 
 	public static void main(String[] args) {
 		BlackjackApp table = new BlackjackApp();
@@ -10,40 +12,23 @@ public class BlackjackApp {
 	}
 
 	public void run() {
-		BlackJackDealer dealer = new BlackJackDealer();
+		BlackJackDealer cecil = new BlackJackDealer();
 		BlackJackPlayer player = new BlackJackPlayer();
-		Scanner kb = new Scanner(System.in);
-		System.out.println("Welcome to Cecil's Blackjack App");
+		System.out.println("Welcome to Cecil's Blackjack Table");
 		System.out.println("Shuffling...");
-		dealer.getDeck().shuffle();
-		System.out.println("Dealing two cards to each player.. \n");
-		System.out.println("[" + dealer.dealCard(dealer).toDealer() + "]");
-		System.out.println("[" + dealer.dealCard(player).toPlayer() + "]");
-		final Card theBlind = dealer.dealCard(dealer);
-		System.out.println("[" + theBlind.blind() + "]");
-		System.out.println("[" + dealer.dealCard(player).toPlayer() + "]\n");
-		System.out.println("[  Dealer Shown:\t" + (dealer.getHand().getHandValue() - theBlind.getValue()) + " ]");
-		System.out.println("[  Player Hand:\t\t" + player.getHandValue(player.getHand()) + " ]\n");
+		cecil.getDeck().shuffle();
+		System.out.println("Dealing two cards to each player, and one blind to the house.. \n");
+		theBlind = cecil.dealFirstRound(player, kb);
+		System.out.println("Flipping the blind.." + theBlind);
 		do {
-			if (player.getHand().getHandValue() < 21) {
-				System.out.println("[1 - Hit][2 - Stay]");
-				int input = kb.nextInt();
-				System.out.println("[Turn the Blind: " + dealer.turnBlind(theBlind) + ".]");
-				System.out.println("Dealer Hand:\t" + (dealer.getHand().getHandValue()));
-				switch (input) {
-				case 1:
-					System.out.println(dealer.dealCard(player).toPlayer());
-				case 2:
-					System.out.println(dealer.playHouseRules());
-					System.out.println("Dealer Hand:\t" + dealer.getHandValue(dealer.getHand()));
-					System.out.println("Player Hand:\t" + player.getHandValue(player.getHand()));
-					break;
-				}
+			if (cecil.checkWins(cecil.getHandValue(cecil.getHand()), player.getHandValue(player.getHand())) == null) {
+				System.out.println("Dealer:" + cecil.getHandValue(cecil.getHand()));
+				System.out.println("Player:" + player.getHandValue(player.getHand()));
+				System.out.println("");
+				cecil.continueRound(player, kb);
 			}
-		} while (player.getHand().getHandValue() < 21 && dealer.getHand().getHandValue() < 21);
-		final int playerHandValueFinal = player.getHand().getHandValue();
-		final int houseHandValueFinal = dealer.getHand().getHandValue();
-		System.out.println(dealer.announceHandResult(playerHandValueFinal, houseHandValueFinal));
+		} while (cecil.checkWins(cecil.getHandValue(cecil.getHand()), player.getHandValue(player.getHand())) == null);
+		System.out.println(cecil.checkWins(cecil.getHandValue(cecil.getHand()), player.getHandValue(player.getHand())));
 		kb.close();
 	}
 }
