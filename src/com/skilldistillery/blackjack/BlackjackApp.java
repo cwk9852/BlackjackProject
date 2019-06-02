@@ -16,24 +16,37 @@ public class BlackjackApp {
 		System.out.println("Welcome to Cecil's Blackjack Table");
 		System.out.println("Shuffling...");
 		cecil.getDeck().shuffle();
-		// int bet = cecil.getBet(kb);
-		System.out.println("Dealing two cards to each player, and one blind to the house.. \n");
+		int bet = 5;
+		boolean insurance = false;
+		System.out.println("Placing Minimum Bet: " + bet);
+		System.out.println("Dealing...");
 		Card theBlind = cecil.dealNewHand(player, kb);
 		int houseHandValue = cecil.getHandValue(cecil.getHand());
 		int playerHandValue = player.getHandValue(player.getHand());
-		System.out.println("Dealer Shown: " + (houseHandValue - theBlind.getValue()));
+		int blindHandValue = houseHandValue - theBlind.getValue();
+		System.out.println("\nHouse Shows: " + blindHandValue);
 		System.out.println("Player Hand: " + playerHandValue);
-		//boolean insurance = cecil.offerInsurance(player, kb, theBlind);
+		if (blindHandValue == 11) {
+			insurance = cecil.offerInsurance(player, kb);
+			playerHandValue = player.getHandValue(player.getHand());
+			houseHandValue = cecil.getHandValue(cecil.getHand());
+			printHands(houseHandValue, playerHandValue);
+			cecil.checkWinsTable(houseHandValue, playerHandValue);
+		}
 		if (cecil.checkWinsTable(houseHandValue, playerHandValue) != true) {
 			do {
-				cecil.continueRound(player, kb);
-				houseHandValue = cecil.getHandValue(cecil.getHand());
+				theBlind = cecil.continueRound(player, kb, theBlind);
 				playerHandValue = player.getHandValue(player.getHand());
+				houseHandValue = cecil.getHandValue(cecil.getHand());
+				printHands(houseHandValue, playerHandValue);
 			} while (cecil.checkWinsTable(houseHandValue, playerHandValue) != true);
 		}
-		cecil.checkWinsTable(houseHandValue, playerHandValue);
-		// cecil.housePays(playerHandValue, bet, insurance);
-		//cecil.clearHands();
+//		cecil.housePays(playerHandValue, bet, insurance);
 		kb.close();
+	}
+
+	public void printHands(int houseHandValue, int playerHandValue) {
+		System.out.println("House Shows: " + houseHandValue);
+		System.out.println("Player Hand: " + playerHandValue);
 	}
 }

@@ -48,22 +48,22 @@ public class BlackJackDealer extends Player implements HouseRules {
 
 	public Card dealNewHand(BlackJackPlayer player, Scanner kb) {
 		Card card = deck.removeCard();
+		player.getHand().add(card);
+		System.out.println(card.toPlayer());
+		card = deck.removeCard();
 		getHand().add(card);
 		System.out.println(card.toHouse());
 		card = deck.removeCard();
+		card = deck.removeCard();
 		player.getHand().add(card);
 		System.out.println(card.toPlayer());
-		card = deck.removeCard();
 		Card theBlind = deck.removeCard();
 		System.out.println(theBlind.toHouseBlind());
 		getHand().add(theBlind);
-		card = deck.removeCard();
-		player.getHand().add(card);
-		System.out.println(card.toPlayer());
 		return theBlind;
 	}
 
-	public void continueRound(BlackJackPlayer player, Scanner kb) {
+	public Card continueRound(BlackJackPlayer player, Scanner kb, Card theBlind) {
 		System.out.println("[1 HIT]\t[2 STAND]");
 		Card card;
 		int input = kb.nextInt();
@@ -71,57 +71,59 @@ public class BlackJackDealer extends Player implements HouseRules {
 		case 1:
 			card = deck.removeCard();
 			player.getHand().add(card);
-			System.out.println(card.toPlayer());
+			System.out.println("Player Hits: " + card.toPlayer());
 		case 2:
-			if (houseRule = true) {
+			if (theBlind != null) {
+				System.out.println("Flipping the blind.." + theBlind);
+				theBlind = null;
+			}
+			if (getHand().getHandValue() < 17) {
 				card = deck.removeCard();
 				getHand().add(card);
-				System.out.println(card.toHouse());
+				System.out.println("House Hits: " + card.toHouse());
 			}
 		default:
 			break;
 		}
+		return theBlind;
 	}
 
 	@Override
 	public boolean checkWinsTable(int houseHandValue, int playerHandValue) {
-		boolean win = false;
+		boolean gameOver = false;
 		String winString = "";
-		if ((playerHandValue > houseHandValue) && (houseRule !=true)) {
-				win = true;
-				winString = "HOUSE STAYS ON " + houseHandValue + ", PLAYER COLLECTS ON " + playerHandValue;
-				if (playerHandValue == houseHandValue) {
-					win = true;
-					winString = "PUSH" + houseHandValue;
-				}
-				if (playerHandValue == 21) {
-					win = true;
-					winString = "PLAYER BLACKJACK, HOUSE PAYS";
-				}
-				if (houseHandValue == 21) {
-					win = true;
-					winString = "HOUSE BLACKJACK, HOUSE COLLECTS";
-				}
+		if (houseHandValue > 21 || playerHandValue > 21) {
+			gameOver = true;
+			if (playerHandValue > 21) {
+				winString = "PLAYER BUSTS ON " + playerHandValue + ", HOUSE COLLECTS";
+			} else {
+				winString = "DEALER BUSTS ON " + houseHandValue + ", PLAYER COLLECTS";
 			}
-//		} else {
-//			if (playerHandValue > 21) {
-//				win = true;
-//				winString = "PLAYER BUSTS ON " + playerHandValue + ", HOUSE COLLECTS";
-//			}
-//			if (houseHandValue > 21) {
-//				win = true;
-//				winString = "DEALER BUSTS ON " + houseHandValue + ", PLAYER COLLECTS";
-//			}
-//			if (win == true) {
-//				System.out.println(winString);
-//			}
-		return win;
 		}
+		if (playerHandValue == 21 || houseHandValue == 21) {
+			gameOver = true;
+			if (playerHandValue == 21) {
+			winString = "PLAYER BLACKJACK, HOUSE PAYS";
+			} else {
+			winString = "HOUSE BLACKJACK, HOUSE COLLECTS";
+			}
+		}
+		if ((getHand().getHandValue() > 16 && playerHandValue <= 21 && (playerHandValue >= houseHandValue))) {
+			gameOver = true;
+			winString = "HOUSE STAYS ON " + houseHandValue + ", PLAYER COLLECTS ON " + playerHandValue;
+			if (playerHandValue == houseHandValue) {
+				winString = "PUSH" + houseHandValue;
+			}
+		}
+		if (gameOver) {
+			System.out.println(winString);
+		}
+		return gameOver;
 	}
 
-	public boolean offerInsurance(BlackJackPlayer player, Scanner kb, Card theBlind) {
+	public boolean offerInsurance(BlackJackPlayer player, Scanner kb) {
 		boolean insurance = false;
-		System.out.println("DEALER CHECKS BLIND, OFFERS INSURANCE");
+		System.out.println("\nDEALER CHECKS BLIND\nOFFERING INSURANCE:");
 		System.out.println("[1 BUY INSURANCE]\t[2 DECLINE INSURANCE]");
 		int input = kb.nextInt();
 		switch (input) {
@@ -130,9 +132,8 @@ public class BlackJackDealer extends Player implements HouseRules {
 		case 2:
 			return insurance;
 		default:
-			System.out.println("Invalid Selection");
+			System.out.println("Invalid Selection, Defaulting to False");
 		}
-		System.out.println("Flipping the blind.." + theBlind);
 		return insurance;
 	}
 
@@ -140,7 +141,7 @@ public class BlackJackDealer extends Player implements HouseRules {
 		System.out.println("Set your bet, an int between 5 and 25");
 		int bet = kb.nextInt();
 		do {
-			if (bet > 5 && bet < 25) {  
+			if (bet > 5 && bet < 25) {
 				return bet;
 			} else {
 				System.out.println("Invalid Input");
@@ -151,8 +152,12 @@ public class BlackJackDealer extends Player implements HouseRules {
 	}
 
 	@Override
-	public boolean housePays(int playerHandValue, int bet, boolean insurance) {
-		// TODO Auto-generated method stub
-		return false;
+	public void housePaysDouble(int playerHandValue, int bet, boolean insurance) {
+		System.out.println("Dont have a payment && ||  wallet system yet.");
+	}
+
+	@Override
+	public void housePays(int playerHandValue, int bet, boolean insurance) {
+		System.out.println("Dont have a payment && ||  wallet system yet.");
 	}
 }
