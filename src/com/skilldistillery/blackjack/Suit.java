@@ -2,7 +2,7 @@ package com.skilldistillery.blackjack;
 
 public enum Suit {
 
-	HEARTS("Hearts"), SPADES("Spades"), CLUBS("Clubs"), DIAMONDS("Diamonds");
+	HEARTS("HEARTS"), SPADES("SPADES"), CLUBS("CLUBS"), DIAMONDS("DIAMONDS");
 
 	final private String name;
 

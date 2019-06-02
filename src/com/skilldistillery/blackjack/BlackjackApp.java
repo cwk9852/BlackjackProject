@@ -11,42 +11,28 @@ public class BlackjackApp {
 	}
 
 	public void run() {
-		BlackJackDealer cecil = new BlackJackDealer();
+		BlackJackDealer house = new BlackJackDealer();
 		BlackJackPlayer player = new BlackJackPlayer();
 		System.out.println("Welcome to Cecil's Blackjack Table");
 		System.out.println("Shuffling...");
-		cecil.getDeck().shuffle();
+		house.getDeck().shuffle();
 		int bet = 5;
-		boolean insurance = false;
 		System.out.println("Placing Minimum Bet: " + bet);
-		System.out.println("Dealing...");
-		Card theBlind = cecil.dealNewHand(player, kb);
-		int houseHandValue = cecil.getHandValue(cecil.getHand());
-		int playerHandValue = player.getHandValue(player.getHand());
-		int blindHandValue = houseHandValue - theBlind.getValue();
-		System.out.println("\nHouse Shows: " + blindHandValue);
-		System.out.println("Player Hand: " + playerHandValue);
-		if (blindHandValue == 11) {
-			insurance = cecil.offerInsurance(player, kb);
-			playerHandValue = player.getHandValue(player.getHand());
-			houseHandValue = cecil.getHandValue(cecil.getHand());
-			printHands(houseHandValue, playerHandValue);
-			cecil.checkWinsTable(houseHandValue, playerHandValue);
+		System.out.println("Dealing...\n");
+		house.dealNewHand(player, kb);
+		boolean firstRound = true;
+		if ((house.getHand().getFirstCardValue()) == 11) {
+			house.checkWinsTable(player.getHand().getHandValue());
+			house.offerInsurance(player, kb);
 		}
-		if (cecil.checkWinsTable(houseHandValue, playerHandValue) != true) {
-			do {
-				theBlind = cecil.continueRound(player, kb, theBlind);
-				playerHandValue = player.getHandValue(player.getHand());
-				houseHandValue = cecil.getHandValue(cecil.getHand());
-				printHands(houseHandValue, playerHandValue);
-			} while (cecil.checkWinsTable(houseHandValue, playerHandValue) != true);
-		}
-//		cecil.housePays(playerHandValue, bet, insurance);
+		do {
+			firstRound = house.continueHand(player, kb, firstRound);
+		} while (house.checkWinsTable(player.getHand().getHandValue()) != true);
 		kb.close();
 	}
 
-	public void printHands(int houseHandValue, int playerHandValue) {
-		System.out.println("House Shows: " + houseHandValue);
-		System.out.println("Player Hand: " + playerHandValue);
+	public void printHands(int house, int player) {
+		System.out.println("House: " + house);
+		System.out.println("Player: " + player);
 	}
 }

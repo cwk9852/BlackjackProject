@@ -40,7 +40,7 @@ public class Card {
 	}
 
 	public String toHouseBlind() {
-		return "FACEDOWN to house.";
+		return "[ FACEDOWN ] to [ HOUSE ]";
 	}
 
 	public Suit getSuit() {
@@ -64,11 +64,11 @@ public class Card {
 	}
 
 	public String toHouse() {
-		return rank + " of " + suit + " to house.";
+		return "[" + rank + " of " + suit + "] to [ HOUSE ]";
 
 	}
 	public String toPlayer() {
-		return rank + " of " + suit + " to player.";
+		return "[" + rank + " of " + suit + "] to [ PLAYER ]";
 		
 	}
 }

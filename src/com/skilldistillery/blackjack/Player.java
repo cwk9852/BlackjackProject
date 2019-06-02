@@ -1,11 +1,17 @@
 package com.skilldistillery.blackjack;
 
+import java.util.HashSet;
+
 public class Player {
+	
+	private HashSet<Hand> hands;
 
 	private Hand hand;
 
 	Player() {
+		hands = new HashSet<Hand>();
 		hand = new Hand();
+		hands.add(hand);
 	}
 
 	public Hand getHand() {

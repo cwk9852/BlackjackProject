@@ -21,9 +21,17 @@ public class Hand {
 		return hand;
 	}
 
-	public Card getLastCard() {
-
-		return null;
+	public int getFirstCardValue() {
+		int card = hand.get(0).getValue();
+		return card;
+	}
+	public int getSecondCardValue() {
+		int card = hand.get(1).getValue();
+		return card;
+	}
+	
+	public String getCard(int index) {
+		return hand.get(index).toString();
 	}
 
 	public void setHand() {
