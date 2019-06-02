@@ -8,12 +8,12 @@ public class Hand {
 	private List<Card> hand;
 
 	Hand() {
-		setHand();
+		this.hand = new ArrayList<>();
 	}
 
-	public void printHand(Hand hand) {
+	public void printHand() {
 		for (Card card : this.hand) {
-			System.out.println(card);
+			System.out.println("[   " + card + "   ]");
 		}
 	}
 
@@ -25,12 +25,16 @@ public class Hand {
 		int card = hand.get(0).getValue();
 		return card;
 	}
+	public Rank getFirstCardRank() {
+		return 	hand.get(0).getRank();
+
+	}
 	public int getSecondCardValue() {
 		int card = hand.get(1).getValue();
 		return card;
 	}
 	
-	public String getCard(int index) {
+	public String printCardAtIndex(int index) {
 		return hand.get(index).toString();
 	}
 

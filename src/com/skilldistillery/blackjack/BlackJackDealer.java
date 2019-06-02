@@ -1,112 +1,79 @@
 package com.skilldistillery.blackjack;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class BlackJackDealer extends Player {
 
-	private Deck shoe;
+	private Shoe shoe;
 
 	BlackJackDealer() {
-		shoe = new Deck();
+		this.name = "Dealer ";
+		this.shoe = new Shoe();
+		this.playerNum = 0;
 	}
 
-	public Deck getDeck() {
+	public Shoe getShoe() {
 		return shoe;
 	}
 
-	public void setDeck(Deck deck) {
-		this.shoe = deck;
-	}
-
-	public Card dealCard(Player name) {
-		Card card = null;
+	public void dealCard(Player name) {
 		try {
-			if (shoe.checkDeckSize() < 1) {
+			if (shoe.checkShoeSize() < 1) {
 				throw new IndexOutOfBoundsException();
 			} else {
-				card = shoe.removeCard();
+				Card card = shoe.removeCard();
 				name.getHand().add(card);
-				return card;
 			}
 		} catch (InputMismatchException e) {
 			System.out.println("Not an integer");
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println("Not enough cards.");
 		}
-		return card;
 	}
 
-	public void dealCards(Player name, int howMany) {
+	public void dealCards(ArrayList<Player> players, int howMany) {
 		for (int i = 0; i < howMany; i++) {
-			Card card = dealCard(name);
-			name.getHand().add(card);
+			for (Player player : players) {
+				dealCard(player);
+			}
 		}
 	}
 
-	public void dealNewHand(BlackJackPlayer player, Scanner kb) {
-		Card card = shoe.removeCard();
-		player.getHand().add(card);
-		System.out.println(card.toPlayer());
-		card = shoe.removeCard();
-		this.getHand().add(card);
-		System.out.println(card.toHouse());
-		card = shoe.removeCard();
-		card = shoe.removeCard();
-		player.getHand().add(card);
-		System.out.println(card.toPlayer());
-		card = shoe.removeCard();
-		System.out.println(card.toHouseBlind());
-		this.getHand().add(card);
+	public void dealNewBlackJackHand(Player name) {
+		System.out.println("[Player\t]");
+		System.out.println("[Dealer\t]");
 	}
 
-	public boolean continueHand(BlackJackPlayer player, Scanner kb, boolean firstRound) {
-		System.out.println("\n[1 HIT]\t[2 STAND]");
-		Card card;
-		int input = kb.nextInt();
-		switch (input) {
-		case 1:
-			card = shoe.removeCard();
-			player.getHand().add(card);
-			System.out.println("Player Hits: " + card.toPlayer());
-		default:
-			if (firstRound) {
-				System.out.println("[FLIP FACEDOWN]\t[" + this.getHand().getCard(1) + "]");
-			}
-			if (getHand().getHandValue() < 17) {
-				card = shoe.removeCard();
-				getHand().add(card);
-				System.out.println("House Hits: " + card.toHouse());
-			}
-			return false;
-		}
+	public void turnBlind() {
+		System.err.println("[FLIP FACEDOWN]\t[" + this.getHand().printCardAtIndex(1) + "]");
 	}
 
-	public boolean checkWinsTable(int playerHandValue) {
+	public boolean checkWinsTable(Player player) {
 		boolean gameOver = false;
 		String winString = "";
-		if (this.getHand().getHandValue() > 21 || playerHandValue > 21) {
+		if (player.getHand().getHandValue() == 21 || this.getHand().getHandValue() == 21) {
 			gameOver = true;
-			if (playerHandValue > 21) {
-				winString = "PLAYER BUSTS ON " + playerHandValue + ", HOUSE COLLECTS";
+			if (player.getHand().getHandValue() == 21) {
+				winString = "PLAYER WIN 21";
 			} else {
-				winString = "DEALER BUSTS ON " + this.getHand().getHandValue() + ", HOUSE PAYS";
+				winString = "HOUSE WIN 21";
 			}
 		}
-		if (playerHandValue == 21 || this.getHand().getHandValue() == 21) {
+		if (this.getHand().getHandValue() > 21 || player.getHand().getHandValue() > 21) {
 			gameOver = true;
-			if (playerHandValue == 21) {
-				winString = "PLAYER 21, HOUSE PAYS";
+			if (player.getHand().getHandValue() > 21) {
+				winString = "HOUSE WIN, PLAYER BUSTS ON " + player.getHand().getHandValue();
 			} else {
-				winString = "HOUSE 21, HOUSE COLLECTS";
+				winString = "PLAYER WIN, DEALER BUSTS ON " + this.getHand().getHandValue();
 			}
 		}
-		if ((this.getHand().getHandValue() >= 16 && playerHandValue <= 21
-				&& (playerHandValue >= this.getHand().getHandValue()))) {
+		if ((player.getHand().getHandValue() >= this.getHand().getHandValue() && this.getHand().getHandValue() >= 17)) {
 			gameOver = true;
-			winString = "HOUSE STAYS ON " + this.getHand().getHandValue() + ", PLAYER COLLECTS ON " + playerHandValue;
-			if (playerHandValue == this.getHand().getHandValue()) {
-				winString = "PUSH\tHOUSE:" + this.getHand().getHandValue() + "\tPLAYER: " + playerHandValue;
+			winString = "PLAYER WIN, HOUSE STAYS ON " + this.getHand().getHandValue();
+			if (player.getHand().getHandValue() == this.getHand().getHandValue()) {
+				winString = "PUSH" + this.getHand().getHandValue();
 			}
 		}
 		if (gameOver) {
@@ -115,20 +82,22 @@ public class BlackJackDealer extends Player {
 		return gameOver;
 	}
 
-	public boolean offerInsurance(BlackJackPlayer player, Scanner kb) {
-		boolean insurance = false;
-		System.out.println("\nDEALER CHECKS BLIND\nOFFERING INSURANCE:");
-		System.out.println("[1 BUY INSURANCE] [2 DECLINE INSURANCE]");
+	public boolean offerInsurance(ArrayList<Player> players, Scanner kb) {
+		System.out.println("\nDEALER CHECKS BLIND\nOFFERING INSURANCE:\n");
 		int input = kb.nextInt();
+		for (Player player : players) {
+			System.out.println(player.getName());
+			System.out.println("[1 ACCEPT] [2 DECLINE]");
+			
+		}
 		switch (input) {
 		case 1:
-			return insurance = true;
+			return true;
 		case 2:
-			return insurance;
+			return false;
 		default:
 			System.out.println("Invalid Response: You forfeit insurance.");
 		}
-		return insurance;
 	}
 
 	public int getBet(Scanner kb) {

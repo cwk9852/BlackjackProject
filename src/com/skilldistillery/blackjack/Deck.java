@@ -9,8 +9,7 @@ public class Deck {
 	private List<Card> deck;
 
 	public Deck() {
-		deck = newDeck();
-//		System.out.println(deck);
+		this.deck = newDeck();
 	}
 
 	public List<Card> getDeck() {
@@ -42,6 +41,11 @@ public class Deck {
 
 	public void shuffle() {
 		Collections.shuffle(deck);
+	}
+
+	public void cut() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

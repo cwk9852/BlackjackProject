@@ -6,8 +6,8 @@ public class Card {
 	private Rank rank;
 
 	Card(Suit suit, Rank rank) {
-		setRank(rank);
-		setSuit(suit);
+		this.rank = rank;
+		this.suit = suit;
 	}
 
 	@Override
@@ -67,8 +67,8 @@ public class Card {
 		return "[" + rank + " of " + suit + "] to [ HOUSE ]";
 
 	}
-	public String toPlayer() {
-		return "[" + rank + " of " + suit + "] to [ PLAYER ]";
+	public String toName(Player name) {
+		return "[" + rank + " of " + suit + "] to " + name.getName() + "]";
 		
 	}
 }
