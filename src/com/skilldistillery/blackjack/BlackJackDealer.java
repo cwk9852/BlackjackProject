@@ -96,12 +96,13 @@ public class BlackJackDealer extends Player {
 		if (playerHandValue == 21 || this.getHand().getHandValue() == 21) {
 			gameOver = true;
 			if (playerHandValue == 21) {
-			winString = "PLAYER 21, HOUSE PAYS";
+				winString = "PLAYER 21, HOUSE PAYS";
 			} else {
-			winString = "HOUSE 21, HOUSE COLLECTS";
+				winString = "HOUSE 21, HOUSE COLLECTS";
 			}
 		}
-		if ((this.getHand().getHandValue() >= 16 && playerHandValue <= 21 && (playerHandValue >= this.getHand().getHandValue()))) {
+		if ((this.getHand().getHandValue() >= 16 && playerHandValue <= 21
+				&& (playerHandValue >= this.getHand().getHandValue()))) {
 			gameOver = true;
 			winString = "HOUSE STAYS ON " + this.getHand().getHandValue() + ", PLAYER COLLECTS ON " + playerHandValue;
 			if (playerHandValue == this.getHand().getHandValue()) {

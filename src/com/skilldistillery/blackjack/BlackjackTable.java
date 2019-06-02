@@ -2,11 +2,11 @@ package com.skilldistillery.blackjack;
 
 import java.util.Scanner;
 
-public class BlackjackApp {
+public class BlackjackTable {
 	Scanner kb = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		BlackjackApp table = new BlackjackApp();
+		BlackjackTable table = new BlackjackTable();
 		table.run();
 	}
 
@@ -29,10 +29,5 @@ public class BlackjackApp {
 			firstRound = house.continueHand(player, kb, firstRound);
 		} while (house.checkWinsTable(player.getHand().getHandValue()) != true);
 		kb.close();
-	}
-
-	public void printHands(int house, int player) {
-		System.out.println("House: " + house);
-		System.out.println("Player: " + player);
 	}
 }
