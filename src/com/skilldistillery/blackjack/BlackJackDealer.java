@@ -11,7 +11,7 @@ public class BlackJackDealer extends Player {
 	BlackJackDealer() {
 		this.name = "DEALER ";
 		this.shoe = new Shoe();
-		this.playerNum = 0;
+		this.playerNum = 1;
 	}
 
 	public Shoe getShoe() {
@@ -29,7 +29,7 @@ public class BlackJackDealer extends Player {
 		} catch (InputMismatchException e) {
 			System.out.println("Not an integer");
 		} catch (IndexOutOfBoundsException e) {
-			System.out.println("Not enough cards.");
+			System.out.println("Not enough cards left in shoe.");
 		}
 	}
 
@@ -42,45 +42,56 @@ public class BlackJackDealer extends Player {
 	}
 
 	public void turnBlind() {
-		System.out.println("\n[FLIP FACEDOWN]\n[DEALER SHOWS]:");
+		System.out.println("\n[FLIP FACEDOWN]\n[DEALER SHOWS]:" + this.getHand().getHandValue());
 		this.getHand().printHand();
-		System.out.println("");
 	}
 
 	public void checkNaturals(ArrayList<Player> players) {
 		for (Player player : players) {
 			if ((player.getHand().getHandValue() == 21) && (this.getHand().getHandValue() != 21)) {
-				System.out.print("[DEALER CHECKS BLIND]");
-				this.getHand().printHand();
-				System.out.println(player.getName() + " !!!BLACKJACK!!! HOUSE PAYS 1.5xBET ");
+				if (this.getHand().getFirstCardValue() == 11) {
+				System.out.println("[DEALER CHECKS BLIND]");
+				}
+				System.out.println("\n" + player.getName() + " !!!BLACKJACK!!! HOUSE PAYS 1.5 ");
 				players.remove(player);
+				break;
 			}
 		}
 	}
 
 	public void checkWins(ArrayList<Player> players) {
-		// need to add hands into a discard list
 		for (Player player : players.subList(1, players.size())) {
-			if (player.getHand().getHandValue() > 21) {
-				System.out.println(player.getName() + "BUSTS");
-				player.getHand().printHand();
+			if (player.getHand().getHandValue() > 21 ) {
 				players.remove(player);
-			} else if (player.getHand().getHandValue() == this.getHand().getHandValue()) {
-				System.out.println(player.getName() + " PUSH " + player.getHand().getHandValue());
-				players.remove(player);
-			} else if ((player.getHand().getHandValue() > this.getHand().getHandValue())) {
-				System.out.println(player.getName() + " BEATS  " + this.getName());
-				players.remove(player);
+				break;
 			}
 		}
-
+		if (this.getHand().getHandValue() > 21) {
+			System.out.println("[DEALER BUSTS]" + this.getHand().getHandValue());
+			players.remove(0);
+			for (Player player : players) {
+				System.out.println(player.getName() + " STAYS, HOUSE PAYS");
+			}
+		} else {
+			System.out.println("[DEALER STAYS " + this.getHand().getHandValue() + "]");
+			for (Player player : players.subList(1, players.size())) {
+				if ((this.getHand().getHandValue() > player.getHand().getHandValue())) {
+					System.out.println("HOUSE BEATS " + player.getName() + ", PLAYER PAYS");
+				}
+				if ((player.getHand().getHandValue() == this.getHand().getHandValue())) {
+					System.out.println(player.getName() + " PUSH " + this.getHand().getHandValue());
+				} else if ((player.getHand().getHandValue() > this.getHand().getHandValue())) {
+					System.out.println(player.getName() + " BEATS HOUSE, HOUSE PAYS");
+				}
+			}
+		}
 	}
 
 	public void offerInsurance(ArrayList<Player> players, Scanner kb) {
-		System.out.print("[DEALER CHECKS BLIND][OFFERING INSURANCE:]");
+		System.out.println("[DEALER CHECKS BLIND][OFFERING INSURANCE:]");
 		for (Player player : players.subList(1, players.size())) {
 			for (Hand hand : player.getHands()) {
-				System.out.print("[" + player.getName() + " - [1 ACCEPT][2 DECLINE]]:");
+				System.out.print("[" + player.getName() + "]\n[1 ACCEPT][2 DECLINE]:");
 				int input = kb.nextInt();
 				switch (input) {
 				case 1:
@@ -105,7 +116,7 @@ public class BlackJackDealer extends Player {
 			if (bet > 5 && bet < 25) {
 				return bet;
 			} else {
-				System.out.println("Invalid Input");
+				System.out.println("Bet Not Allowed");
 				bet = 0;
 			}
 		} while (bet == 0);
@@ -137,9 +148,8 @@ public class BlackJackDealer extends Player {
 						System.out.println("[" + player.getName() + "]" + "[HITS]");
 						if (player.getHand().getHandValue() > 21) {
 							System.out.println(
-									"[" + player.getName() + " BUSTS on " + player.getHand().getHandValue() + "]");
+									"[" + player.getName() + " BUSTS " + player.getHand().getHandValue() + "]");
 							player.getHand().printHand();
-							players.remove(player);
 						} else {
 							player.getHand().printHand();
 							System.out.print("[ " + player.getName() + " ] - [1. HIT] [2. STAY]:");
@@ -171,16 +181,13 @@ public class BlackJackDealer extends Player {
 	}
 
 	public void playHouseRule() {
-		do {
-			Card card = shoe.removeCard();
-			this.getHand().add(card);
-			System.out.println("[DEALER HITS]");
-			this.getHand().printHand();
-		} while ((this.getHand().getHandValue() < 16));
-		if (this.getHand().getHandValue() > 21) {
-			System.out.println("[DEALER BUSTS]");
-		} else {
-			System.out.println("[DEALER STAYS]");
+		if (this.getHand().getHandValue() < 17) {
+			do {
+				Card card = shoe.removeCard();
+				this.getHand().add(card);
+				System.out.println("[DEALER HITS]");
+				this.getHand().printHand();
+			} while ((this.getHand().getHandValue() < 16));
 		}
 	}
 }
