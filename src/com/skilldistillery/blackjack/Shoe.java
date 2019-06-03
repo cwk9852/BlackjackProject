@@ -19,6 +19,7 @@ public class Shoe extends Deck {
 	}
 
 	private List<Card> newShoe() {
+		// List<Deck> shoe = new ArrayList<>();
 		List<Card> shoe = new ArrayList<>(312);
 		for (int i = 0; i < 6; i++) {
 			for (Suit suit : Suit.values()) {

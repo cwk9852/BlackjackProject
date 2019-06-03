@@ -50,7 +50,7 @@ public class BlackJackDealer extends Player {
 		for (Player player : players) {
 			if ((player.getHand().getHandValue() == 21) && (this.getHand().getHandValue() != 21)) {
 				if (this.getHand().getFirstCardValue() == 11) {
-				System.out.println("[DEALER CHECKS BLIND]");
+					System.out.println("[DEALER CHECKS BLIND]");
 				}
 				System.out.println("\n" + player.getName() + " !!!BLACKJACK!!! HOUSE PAYS 1.5 ");
 				players.remove(player);
@@ -61,7 +61,7 @@ public class BlackJackDealer extends Player {
 
 	public void checkWins(ArrayList<Player> players) {
 		for (Player player : players.subList(1, players.size())) {
-			if (player.getHand().getHandValue() > 21 ) {
+			if (player.getHand().getHandValue() > 21) {
 				players.remove(player);
 				break;
 			}

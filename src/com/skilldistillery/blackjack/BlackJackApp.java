@@ -13,6 +13,7 @@ public class BlackJackApp {
 	}
 
 	public void run() {
+		// common package?
 		Scanner kb = new Scanner(System.in);
 		dealer = new BlackJackDealer();
 		System.out.println("Welcome to Cecil's Blackjack Table");
