@@ -71,4 +71,9 @@ public class Card {
 		return "[" + rank + " of " + suit + "] to " + name.getName() + "]";
 		
 	}
+
+	public String faceDown() {
+		// TODO Auto-generated method stub
+		return "FACE DOWN   ";
+	}
 }

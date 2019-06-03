@@ -9,7 +9,7 @@ public class BlackJackDealer extends Player {
 	private Shoe shoe;
 
 	BlackJackDealer() {
-		this.name = "Dealer ";
+		this.name = "DEALER ";
 		this.shoe = new Shoe();
 		this.playerNum = 0;
 	}
@@ -41,62 +41,60 @@ public class BlackJackDealer extends Player {
 		}
 	}
 
-	public void dealNewBlackJackHand(Player name) {
-		System.out.println("[Player\t]");
-		System.out.println("[Dealer\t]");
-	}
-
 	public void turnBlind() {
-		System.err.println("[FLIP FACEDOWN]\t[" + this.getHand().printCardAtIndex(1) + "]");
+		System.out.println("\n[FLIP FACEDOWN]\n[DEALER SHOWS]:");
+		this.getHand().printHand();
+		System.out.println("");
 	}
 
-	public boolean checkWinsTable(Player player) {
-		boolean gameOver = false;
-		String winString = "";
-		if (player.getHand().getHandValue() == 21 || this.getHand().getHandValue() == 21) {
-			gameOver = true;
-			if (player.getHand().getHandValue() == 21) {
-				winString = "PLAYER WIN 21";
-			} else {
-				winString = "HOUSE WIN 21";
-			}
-		}
-		if (this.getHand().getHandValue() > 21 || player.getHand().getHandValue() > 21) {
-			gameOver = true;
-			if (player.getHand().getHandValue() > 21) {
-				winString = "HOUSE WIN, PLAYER BUSTS ON " + player.getHand().getHandValue();
-			} else {
-				winString = "PLAYER WIN, DEALER BUSTS ON " + this.getHand().getHandValue();
-			}
-		}
-		if ((player.getHand().getHandValue() >= this.getHand().getHandValue() && this.getHand().getHandValue() >= 17)) {
-			gameOver = true;
-			winString = "PLAYER WIN, HOUSE STAYS ON " + this.getHand().getHandValue();
-			if (player.getHand().getHandValue() == this.getHand().getHandValue()) {
-				winString = "PUSH" + this.getHand().getHandValue();
-			}
-		}
-		if (gameOver) {
-			System.out.println("\n" + winString);
-		}
-		return gameOver;
-	}
-
-	public boolean offerInsurance(ArrayList<Player> players, Scanner kb) {
-		System.out.println("\nDEALER CHECKS BLIND\nOFFERING INSURANCE:\n");
-		int input = kb.nextInt();
+	public void checkNaturals(ArrayList<Player> players) {
 		for (Player player : players) {
-			System.out.println(player.getName());
-			System.out.println("[1 ACCEPT] [2 DECLINE]");
-			
+			if ((player.getHand().getHandValue() == 21) && (this.getHand().getHandValue() != 21)) {
+				System.out.print("[DEALER CHECKS BLIND]");
+				this.getHand().printHand();
+				System.out.println(player.getName() + " !!!BLACKJACK!!! HOUSE PAYS 1.5xBET ");
+				players.remove(player);
+			}
 		}
-		switch (input) {
-		case 1:
-			return true;
-		case 2:
-			return false;
-		default:
-			System.out.println("Invalid Response: You forfeit insurance.");
+	}
+
+	public void checkWins(ArrayList<Player> players) {
+		// need to add hands into a discard list
+		for (Player player : players.subList(1, players.size())) {
+			if (player.getHand().getHandValue() > 21) {
+				System.out.println(player.getName() + "BUSTS");
+				player.getHand().printHand();
+				players.remove(player);
+			} else if (player.getHand().getHandValue() == this.getHand().getHandValue()) {
+				System.out.println(player.getName() + " PUSH " + player.getHand().getHandValue());
+				players.remove(player);
+			} else if ((player.getHand().getHandValue() > this.getHand().getHandValue())) {
+				System.out.println(player.getName() + " BEATS  " + this.getName());
+				players.remove(player);
+			}
+		}
+
+	}
+
+	public void offerInsurance(ArrayList<Player> players, Scanner kb) {
+		System.out.print("[DEALER CHECKS BLIND][OFFERING INSURANCE:]");
+		for (Player player : players.subList(1, players.size())) {
+			for (Hand hand : player.getHands()) {
+				System.out.print("[" + player.getName() + " - [1 ACCEPT][2 DECLINE]]:");
+				int input = kb.nextInt();
+				switch (input) {
+				case 1:
+					hand.setInsurance(true);
+					break;
+				case 2:
+					hand.setInsurance(false);
+					break;
+				default:
+					hand.setInsurance(false);
+					System.out.println("Invalid Response: You forfeit insurance.");
+					break;
+				}
+			}
 		}
 	}
 
@@ -114,4 +112,75 @@ public class BlackJackDealer extends Player {
 		return bet;
 	}
 
+	public void printPlayerHands(ArrayList<Player> players) {
+		for (Player player : players.subList(1, players.size())) {
+//			char c = 65;
+			System.out.println("[ " + player.getName() + " ]");
+			for (Hand hand : player.getHands()) {
+//				System.out.println("HAND " + c);
+//				++c;
+				hand.printHand();
+			}
+		}
+	}
+
+	public void getHits(ArrayList<Player> players, Scanner kb) {
+		for (Player player : players.subList(1, players.size())) {
+			for (Hand hand : player.getHands()) {
+				System.out.println();
+				System.out.print("[ " + player.getName() + " ] - [1. HIT] [2. STAY]:");
+				int input = kb.nextInt();
+				if (input == 1) {
+					do {
+						Card card = shoe.removeCard();
+						hand.add(card);
+						System.out.println("[" + player.getName() + "]" + "[HITS]");
+						if (player.getHand().getHandValue() > 21) {
+							System.out.println(
+									"[" + player.getName() + " BUSTS on " + player.getHand().getHandValue() + "]");
+							player.getHand().printHand();
+							players.remove(player);
+						} else {
+							player.getHand().printHand();
+							System.out.print("[ " + player.getName() + " ] - [1. HIT] [2. STAY]:");
+							input = kb.nextInt();
+						}
+					} while (player.getHand().getHandValue() < 21 && input == 1);
+					if (input == 2) {
+						System.out
+								.println("[" + player.getName() + " STAYS on " + player.getHand().getHandValue() + "]");
+					}
+				}
+			}
+		}
+	}
+
+	public void printDealerHandWithBlind() {
+		System.out.println("[DEALER  ]");
+		System.out.println("[   " + this.getHand().printCardAtIndex(0) + "   ]");
+		System.out.println("[   " + this.getHand().printCardFaceDown(1) + "      ]");
+	}
+
+	public ArrayList<Player> setPlayers(int num, Player dealer) {
+		ArrayList<Player> players = new ArrayList<>();
+		players.add(dealer);
+		for (int i = 1; i < num + 1; i++) {
+			players.add(new Player("PLAYER ", i));
+		}
+		return players;
+	}
+
+	public void playHouseRule() {
+		do {
+			Card card = shoe.removeCard();
+			this.getHand().add(card);
+			System.out.println("[DEALER HITS]");
+			this.getHand().printHand();
+		} while ((this.getHand().getHandValue() < 16));
+		if (this.getHand().getHandValue() > 21) {
+			System.out.println("[DEALER BUSTS]");
+		} else {
+			System.out.println("[DEALER STAYS]");
+		}
+	}
 }

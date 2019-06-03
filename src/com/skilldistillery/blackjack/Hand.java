@@ -6,6 +6,8 @@ import java.util.List;
 public class Hand {
 
 	private List<Card> hand;
+	protected boolean hasInsurance;
+
 
 	Hand() {
 		this.hand = new ArrayList<>();
@@ -63,6 +65,15 @@ public class Hand {
 			System.out.println(card);
 		}
 		System.out.println("Total value: " + handValue);
+	}
+
+	public String printCardFaceDown(int index) {
+		return hand.get(index).faceDown();
+		
+	}
+	
+	public boolean setInsurance(boolean b) {
+		return this.hasInsurance = b;
 	}
 
 }
