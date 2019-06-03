@@ -25,7 +25,7 @@ public class BlackJackApp {
 //		dealer.getShoe().cut();
 		System.out.println("Dealing...\n");
 		dealer.dealCards(players, 2);
-		// getBets(players, kb);
+// 		getBets(players, kb);
 		dealer.printPlayerHands(players);
 		dealer.printDealerHandWithBlind();
 		if (dealer.getHand().getFirstCardValue() == 11) {
