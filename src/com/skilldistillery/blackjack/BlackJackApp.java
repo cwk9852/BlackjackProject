@@ -13,8 +13,6 @@ public class BlackJackApp {
 	}
 
 	public void run() {
-		// next goal: when a player is removed:
-		// add hands into a discard list, pay or collect bet
 		Scanner kb = new Scanner(System.in);
 		dealer = new BlackJackDealer();
 		System.out.println("Welcome to Cecil's Blackjack Table");
@@ -23,10 +21,11 @@ public class BlackJackApp {
 		players = dealer.setPlayers(num, dealer);
 		System.out.println("Shuffling...");
 		dealer.getShoe().shuffle();
-		System.out.println("Cut...");
-		dealer.getShoe().cut();
+//		System.out.println("Cut..."); does nothing
+//		dealer.getShoe().cut();
 		System.out.println("Dealing...\n");
 		dealer.dealCards(players, 2);
+		// getBets(players, kb);
 		dealer.printPlayerHands(players);
 		dealer.printDealerHandWithBlind();
 		if (dealer.getHand().getFirstCardValue() == 11) {
