@@ -3,10 +3,10 @@
 ### Skill Distillery Week 4 Homework
 
 ### Description
-BlackJackTable is a simple command line version of the well-known game of 21. The only rule is the house must hit if the house hand value is less than 17. If a player hits a hand value greater than 21 the player BUSTS, and is immediately removed from the round. After all players have hit, the dealer hits while rule is true. If the dealer busts, any staying players WIN. If the dealer and player both STAY, and their hands are equal, a stand off occurs PUSH. Otherwise, the player with the greatest hand WINS. 
+BlackJackTable is a simple command line version of the well-known game of 21. The only rule is the house must hit if the house hand value is < 17. Players may then take additional cards to  attempt to beat the dealer hand value. If a player hits a hand value > 21 the player BUSTS, and is immediately removed from the round. After all players have hit, the dealer then follows the house rule until a BUST or STAY occurs. In the case of dealer BUST, any staying players WIN. If the dealer STAYS, and a player both also stays, the player with the greatest hand WINS. The final case, both the deal and player stay, and their hands are equal, a stand off occurs PUSH.
 
 ## Lessons Learned
-A ton of practice on calling & writing methods, extends, experimented with constants, implementing enums, foreach, if else, do while, and switches. Substantial time wasted trying out variables. Simply calling the method would have saved a lot of time. Writing tests would have also saved a lot of time but still very weak in this area. Learned a ton, practiced a ton, enjoyed the project.
+A ton of practice on calling & writing methods, extends, experimented with constants, implementing enums, foreach, if else, do while, and switches. Substantial time wasted "fooling" with assigning values to variables that shouldnt have been variables. Calling the method everytime was less work than the mess setting and needing to reassign variables caused.
 
 Stretch Goals Achieved:
 Deals from a six deck shoe.
